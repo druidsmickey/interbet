@@ -8,7 +8,7 @@ import { catchError, retry } from 'rxjs/operators';
 })
 export class DataService {
 
-  private apiUrl = 'http://localhost:3000/items'; // Ensure this matches the server configuration
+  private apiUrl = 'http://134.209.144.53/items'; // Ensure this matches the server configuration
 
   constructor(private http: HttpClient) {}
   
