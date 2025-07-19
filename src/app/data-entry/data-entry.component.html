@@ -1,0 +1,290 @@
+<form>
+
+  <!-- Race Number Calculator Grid -->
+  <div class="calc-container">
+    <div class="calc-title">Select Race Number</div>
+    <div class="calc-grid">
+      <button type="button"
+              *ngFor="let race of [].constructor(numRaces); let i = index"
+              (click)="raceNum = i + 1">
+        {{ i + 1 }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="raceNum" class="selected-values-inline">
+    Race Number: <span>{{ raceNum }}</span>
+    <ng-container *ngIf="horseNum">
+      &nbsp;|&nbsp; Horse Number: <span>{{ horseNum }}</span>
+    </ng-container>
+  </div>
+
+  <!-- Horse Number Calculator Grid -->
+  <div class="calc-container">
+    <div class="calc-title">Select Horse Number</div>
+    <div class="calc-grid">
+      <button type="button"
+              *ngFor="let horse of [].constructor(numHorses); let i = index"
+              (click)="horseNum = i + 1">
+        {{ i + 1 }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Combined selected Race and Horse Number -->
+  <div *ngIf="raceNum" class="selected-values-inline">
+    Race Number: <span>{{ raceNum }}</span>
+    <ng-container *ngIf="horseNum">
+      &nbsp;|&nbsp; Horse Number: <span>{{ horseNum }}</span>
+    </ng-container>
+  </div>
+
+  <!-- Show radio groups only after horseNum is selected -->
+  <ng-container>
+    <!-- Sale/Purchase Radio Group -->
+    <div class="radio-group-container">
+      <div class="radio-group-title">Sale / Purchase</div>
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="betType" value="1" [(ngModel)]="betType" /> Sale
+        </label>
+        <label>
+          <input type="radio" name="betType" value="2" [(ngModel)]="betType" /> Purchase
+        </label>
+      </div>
+      <div class="radio-group-title">Bet Type</div>
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="oddsType" value="1" [(ngModel)]="oddsType" min="1" max="5000" maxlength="4" step="1"/> Books 500
+        </label>
+        <label>
+          <input type="radio" name="oddsType" value="2" [(ngModel)]="oddsType" min="1" max="100000" maxlength="6" step="5"/> Odds
+        </label>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <div *ngIf="oddsType == 1" class="form-fields-container">
+    <div class="form-row">
+      <label for="books">Books:</label>
+      <input type="number" id="books" name="books" [(ngModel)]="books" class="nice-input" />
+    </div>
+    <div class="form-row">
+      <label for="f500">F500:</label>
+      <input type="number" id="f500" name="f500" [(ngModel)]="f500" class="nice-input" />
+    </div>
+    <div class="form-row">
+      <label for="stake">Stake:</label>
+      <input type="number" id="stake" name="stake" [value]="(books ?? 0)* (f500 ?? 0)" readonly class="nice-input" />
+    </div>
+    <div class="form-row">
+      <label for="nameClient">Name:</label>
+      <input type="text" id="nameClient" name="nameClient" [(ngModel)]="nameClient" class="nice-input" />
+    </div>
+    <div class="form-row">
+      <label for="tax">Tax:</label>
+      <input type="number" id="tax" name="tax" [(ngModel)]="tax" class="nice-input" />
+    </div>
+    <button type="button" (click)="saveDataF500()" class="nice-btn">Save</button>
+    <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+  </div>
+  
+  <div *ngIf="oddsType == 2" class="form-fields-container">
+    <div class="form-row">
+      <label for="stake">Stake:</label>
+      <input type="number" id="stake" name="stake" [(ngModel)]="stake" class="nice-input"/>
+    </div>
+    <div class="form-row">
+      <label for="odds100">Odds:</label>
+      <input type="number" id="odds100" name="odds100" [(ngModel)]="odds100" min="115" max="100000" class="nice-input"/>
+    </div>
+    <div class="form-row">
+      <label for="nameClient">Name:</label>
+      <input type="text" id="nameClient" name="nameClient" [(ngModel)]="nameClient" class="nice-input" />
+    </div>
+    <div class="form-row">
+      <label for="tax">Tax:</label>
+      <input type="number" id="tax" name="tax" [(ngModel)]="tax" class="nice-input" />
+    </div>
+    <button type="button" (click)="saveDataOdds()" class="nice-btn">Save</button>
+    <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+  </div>
+</form>
+
+<style>
+.calc-container {
+  margin: 1.5rem auto;
+  max-width: 340px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  text-align: center;
+}
+.calc-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.7rem;
+  font-weight: 600;
+  color: #333;
+}
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.7rem;
+}
+.calc-grid button {
+  font-size: 1.3rem;
+  padding: 1rem 0;
+  border: none;
+  border-radius: 8px;
+  background: #e0e7ff;
+  color: #222;
+  font-weight: 500;
+  transition: background 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.calc-grid button:active,
+.calc-grid button:hover {
+  background: #4e8cff;
+  color: #fff;
+}
+.selected-values-inline {
+  margin: 0.7rem auto 0.5rem auto;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: #4e8cff;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+}
+.selected-values-inline span {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2563eb;
+}
+.back-btn {
+  margin-bottom: 0.7rem;
+  background: #fff;
+  color: #4e8cff;
+  border: 1px solid #4e8cff;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.back-btn:hover, .back-btn:active {
+  background: #4e8cff;
+  color: #fff;
+}
+.radio-group-container {
+  margin: 1.2rem auto 0.7rem auto;
+  max-width: 260px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 0.7rem 0.7rem 0.9rem 0.7rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  text-align: center;
+  font-size: 0.98rem;
+}
+.radio-group-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+.radio-group {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+.radio-group label {
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: #4e8cff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.radio-group input[type="radio"] {
+  accent-color: #4e8cff;
+  margin-right: 0.2rem;
+}
+.radio-group label:hover, .radio-group input[type="radio"]:focus + label {
+  background: #e0e7ff;
+}
+.form-fields-container {
+  margin: 1.2rem auto 0.7rem auto;
+  max-width: 260px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 0.7rem 0.7rem 0.9rem 0.7rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.form-row label {
+  flex: 0 0 90px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0;
+  text-align: left;
+}
+.form-row .nice-input {
+  flex: 1 1 auto;
+  margin-bottom: 0;
+  min-width: 0;
+  font-size: 0.98rem;
+  padding: 0.45rem 0.7rem;
+}
+.nice-input {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid #c3dafe;
+  border-radius: 7px;
+  font-size: 0.98rem;
+  padding: 0.45rem 0.7rem;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  background: #fff;
+  margin-bottom: 0.2rem;
+  min-width: 0;
+}
+.nice-input:focus {
+  border: 1.5px solid #4e8cff;
+  box-shadow: 0 0 0 2px #e0e7ff;
+}
+.nice-btn {
+  margin-top: 0.7rem;
+  padding: 0.7rem 0;
+  background: #4e8cff;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(78,140,255,0.08);
+}
+.nice-btn:hover, .nice-btn:active {
+  background: #2563eb;
+}
+</style>

@@ -1,0 +1,11 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input[type="number"] {
+  width: 200px;
+  padding: 5px;
+  font-size: 14px;
+}

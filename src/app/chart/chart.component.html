@@ -1,0 +1,81 @@
+<h3>Profit/Loss</h3>
+<table class="profit-loss-table small-table">
+  <thead>
+    <tr>
+      <th>Horse</th>
+      <th *ngFor="let raceNum of [].constructor(numRaces); let raceIndex = index">Race {{ raceIndex + 1 }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let horseNum of [].constructor(numHorses); let horseIndex = index">
+      <td>{{ horseIndex + 1 }}</td>
+      <td *ngFor="let raceNum of [].constructor(numRaces); let raceIndex = index"
+          [ngClass]="{'negative-cell': totalprofitloss[raceIndex][horseIndex] < 0}">
+        <ng-container *ngIf="totalprofitloss[raceIndex][horseIndex] !== 'Withdrawn'; else withdrawnTpl2">
+          <span>
+            {{ totalprofitloss[raceIndex][horseIndex] | number:'2.0-0' }}
+          </span>
+        </ng-container>
+        <ng-template #withdrawnTpl2>
+          Withdrawn
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<style>
+/* filepath: c:\fullstack\src\app\chart\chart.component.html */
+.profit-loss-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.profit-loss-table th, .profit-loss-table td {
+  border: 1px solid #e0e0e0;
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+}
+
+.profit-loss-table thead th {
+  background: #f5f7fa;
+  font-weight: bold;
+  color: #333;
+}
+
+.profit-loss-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.profit-loss-table tbody tr:hover {
+  background: #eaf6ff;
+  transition: background 0.2s;
+}
+
+.profit-loss-table td {
+  min-width: 50px;
+}
+
+.profit-loss-table th:first-child,
+.profit-loss-table td:first-child {
+  background: #f0f4f8;
+  font-weight: bold;
+}
+
+.small-table {
+  font-size: 0.85rem;
+  width: auto;
+  max-width: 600px;
+}
+
+/* New: red background for negative values, black text */
+.negative-cell {
+  background: #f33838 !important;
+  color: #111 !important;
+}
+</style>
+
+
