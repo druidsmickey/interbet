@@ -7,7 +7,7 @@ import { catchError, retry } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class WinnerService {
-  private apiUrl = 'https://134.209.144.53/winners'; // Replace with your actual backend URL
+  private apiUrl = 'http://134.209.144.53:3000/winners'; // Update this to your server's address
 
   constructor(private http: HttpClient) {}
 
