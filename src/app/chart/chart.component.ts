@@ -69,7 +69,7 @@ export class ChartComponent implements OnInit {
               return true;
             })
             .reduce((sum, item) => {
-              const stake = item.bettype === 2 ? -(item.stake || 0) : -(item.stake || 0);
+              const stake = item.betType === 2 ? -(item.stake || 0) : (item.stake || 0);
               return sum + stake;
             }, 0);
         }
@@ -102,8 +102,9 @@ export class ChartComponent implements OnInit {
                 item.special !== 1                // Exclude special items
               )
               .reduce((sum, item) => {
-                const payoutValue = item.bettype === 2 ? -(item.payout || 0) : -(item.payout || 0);
+                const payoutValue = item.betType === 2 ? -(item.payout || 0) : (item.payout || 0);
                 console.log(`Race ${i + 1}, Horse ${j + 1}: Payout Value = ${payoutValue}`);
+                console.log(item.betType);
                 return sum + payoutValue;
               }, 0);
               console.log(winner.rule4Deduction);
