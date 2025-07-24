@@ -7,7 +7,7 @@ const Winners = require('./model/winners');
 
 const router = express.Router();
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
@@ -16,8 +16,8 @@ app.use(cors());
 
 
 // MongoDB connection
-
-mongoose.connect('mongodb+srv://dbFullStack:dbFullstackPassword@atlascluster.jddso.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster')
+const mongoUri = process.env.MONGODB_URI;
+mongoose.connect(mongoUri)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 

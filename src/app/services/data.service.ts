@@ -2,16 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  private apiUrl = 'http://localhost:3000/items'; // Ensure this matches the server configuration
+  private apiUrl = `${environment.apiUrl}/items`;
 
   constructor(private http: HttpClient) {}
-  
+
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl).pipe(
       retry(3), // Retry up to 3 times before failing
@@ -57,7 +58,7 @@ export class DataService {
   }
 
 
-  
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Something went wrong; please try again later.';
     if (error.error instanceof ErrorEvent) {

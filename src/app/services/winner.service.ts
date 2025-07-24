@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WinnerService {
-  private apiUrl = 'http://localhost:3000/winners'; // Update this to your server's address
+  private apiUrl = `${environment.apiUrl}/winners`;
 
   constructor(private http: HttpClient) {}
 
@@ -21,7 +22,7 @@ export class WinnerService {
   getWinners(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
-  
+
   resetAll(): Observable<any[]> {
     return this.http.delete<any[]>(this.apiUrl).pipe(
       retry(3), // Retry up to 3 times before failing
