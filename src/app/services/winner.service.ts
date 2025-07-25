@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WinnerService {
-  private apiUrl = 'http://localhost:3000/winners'; // Update this to your server's address
-
+  private apiUrl = `${environment.apiUrl}/winners`;
+  
   constructor(private http: HttpClient) {}
 
   saveWinner(winner: any): Observable<any> {
