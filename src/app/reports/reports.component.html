@@ -121,7 +121,8 @@
 </div>
 <style>
 .reports-container {
-  max-width: 98vw;
+  max-width: 794px; /* A4 width at 96dpi */
+  width: 100%;
   margin: 1.2rem auto;
   background: #f8f9fa;
   border-radius: 12px;
@@ -141,13 +142,31 @@
   border-collapse: collapse;
   background: #fff;
   font-size: 0.93rem;
-  min-width: 800px;
+  min-width: 794px; /* Match A4 width */
+  max-width: 794px;
+  table-layout: fixed;
 }
 .reports-table th, .reports-table td {
   border: 1px solid #e0e7ff;
   padding: 0.35rem 0.5rem;
   text-align: center;
   font-size: 0.95em;
+}
+/* Add this to decrease the width of the Type column */
+.reports-table th:nth-child(5),
+.reports-table td:nth-child(5) {
+  width: 65px;
+  min-width: 40px;
+  max-width: 60px;
+  white-space: nowrap;
+}
+/* Add this to decrease the width of the Status column */
+.reports-table th:nth-child(11),
+.reports-table td:nth-child(11) {
+  width: 80px;
+  min-width: 60px;
+  max-width: 100px;
+  white-space: nowrap;
 }
 .reports-table th {
   background: #e0e7ff;
@@ -220,6 +239,39 @@
   .reports-table th, .reports-table td {
     padding: 0.22rem 0.2rem;
     font-size: 0.89rem;
+  }
+}
+@media print {
+  body, html {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+  }
+  .reports-container {
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-width: 210mm !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    padding: 0 !important;
+  }
+  .reports-table {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    font-size: 11pt !important;
+  }
+  .reports-table th, .reports-table td {
+    font-size: 11pt !important;
+    padding: 0.18rem 0.2rem !important;
+  }
+  /* Hide print-unfriendly elements if needed */
+  button {
+    display: none !important;
   }
 }
 </style>

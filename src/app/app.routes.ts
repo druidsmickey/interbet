@@ -6,6 +6,7 @@ import { ListdataComponent } from './listdata/listdata.component';
 import { ChartComponent } from './chart/chart.component'; // Import the ChartComponent
 import { ParamsComponent } from './params/params.component'; // Import the ParamsComponent
 import { ReportsComponent } from './reports/reports.component'; // Import the ReportsComponent
+import { NewMeetComponent } from './new-meet/new-meet.component';   
 
 export const routes: Routes = [
     {
@@ -42,5 +43,9 @@ export const routes: Routes = [
     {
         path:'reports',
         component: ReportsComponent,
-    }                 
+    },
+    {
+        path:'new-meet',
+        component: NewMeetComponent,
+    }                          
 ];

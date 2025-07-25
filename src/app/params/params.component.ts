@@ -14,8 +14,8 @@ import { WinnerService } from '../services/winner.service';
 export class ParamsComponent implements OnInit {
   items: any[] = [];
   winner: any[] = [];
-  raceNum: string = '';
-  horseNum: string = '';
+  raceNum: number | null = null;
+  horseNum: number | null = null;
   numRaces: number = 8;
   numHorses: number = 11;
   constructor(private itemService: DataService, private winnerService:WinnerService, private http: HttpClient) {}
@@ -44,15 +44,15 @@ export class ParamsComponent implements OnInit {
         Array.isArray(w.specialNum) &&
         w.specialNum[horse - 1] == true
       );
-
+      console.log('Winner Match:', winnerMatch);
       if (winnerMatch) {
-        // Update items where numRace and numHorse match
+        // Update all items where numRace matches (ignore horseNum)
         this.items.forEach(item => {
-          if (item.raceNum == race && item.horseNum == horse) {
+          if (item.raceNum == race) {
             item.special = 1;
             console.log('Item updated:', item);
             // Persist the change to the database
-            this.itemService.updateItemSpecial(item._id,item.special ).subscribe({
+            this.itemService.updateItemSpecial(item._id, item.special).subscribe({
               next: (res) => console.log('Database updated:', res),
               error: (err) => console.error('Update failed:', err)
             });
@@ -62,8 +62,8 @@ export class ParamsComponent implements OnInit {
 
       console.log('Update Special clicked', this.raceNum, this.horseNum);
 
-      this.raceNum = '';
-      this.horseNum = '';
+      this.raceNum = 0;
+      this.horseNum = 0;
     }
   }
   cancelSpecial() {
@@ -85,7 +85,7 @@ export class ParamsComponent implements OnInit {
       if (winnerMatch) {
         // Update items where numRace and numHorse match
         this.items.forEach(item => {
-          if (item.raceNum == race && item.horseNum == horse) {
+          if (item.raceNum == race) {
             item.special = 0;
             console.log('Item updated:', item);
             // Persist the change to the database
@@ -99,16 +99,9 @@ export class ParamsComponent implements OnInit {
 
       console.log('Update Special clicked', this.raceNum, this.horseNum);
 
-      this.raceNum = '';
-      this.horseNum = '';
+      this.raceNum = null;
+      this.horseNum = null;
     }
   }
-  resetAll() {
-    this.itemService.resetAll().subscribe(data => {
-      this.items = data;
-    });
-    this.winnerService.resetAll().subscribe(data => {
-      this.winner = data;
-    });
-  }
+
 }

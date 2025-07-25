@@ -29,13 +29,11 @@ app.get('/', (req, res) => {
 app.get('/items', async (req, res) => {
   const items = await Item.find();
   res.json(items);
-  console.log('Items fetched:', items); // Log the fetched items
 });
 
 app.get('/winners', async (req, res) => {
   const winners = await Winners.find();
   res.json(winners);
-  console.log('Winners fetched:', winners); // Log the fetched winners
 });
 
 app.delete('/items', async (req, res) => {
@@ -52,7 +50,7 @@ app.delete('/winners', async (req, res) => {
     await Winners.deleteMany({});
     // Insert default winners for raceNum 1 to 20
     const defaultWinners = [];
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= 8; i++) {
       defaultWinners.push({
         raceNum: i,
         // Add other default fields as needed, e.g.:

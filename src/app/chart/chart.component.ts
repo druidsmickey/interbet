@@ -20,10 +20,13 @@ export class ChartComponent implements OnInit {
   totalstake: number[] = [];
   totalpayout: any[][] = [];
   totalprofitloss: any[][] = [];
+  splitIndex: number = 0;
 
   constructor(private itemService: DataService, private winnerService: WinnerService, private http: HttpClient) {}
 
   ngOnInit() {
+    // Set splitIndex to half of numRaces, rounded up
+    this.splitIndex = Math.ceil(this.numRaces / 2);
 
     for (let i = 0; i < this.numRaces; i++) {
       this.totalstake[i] = 0;
@@ -111,6 +114,7 @@ export class ChartComponent implements OnInit {
             // this.totalpayout[i][j] = payout * (100 - winner.rule4Deduction) / 100; // Store the total payout for horse j in race i
             // Calculate profit/loss: totalstake for the race minus payout for this horse
             this.totalprofitloss[i][j] = this.totalstake[i] - (payout * (100 - winner.rule4Deduction) / 100);
+            this.totalpayout[i][j] = payout * (100 - winner.rule4Deduction) / 100;
             console.log(`Race ${i + 1}, Horse ${j + 1}: Stake = ${this.totalstake[i]}, Payout = ${payout}, Profit/Loss = ${this.totalprofitloss[i][j]}`);
           }
         }

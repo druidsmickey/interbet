@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class WinnerService {
   private apiUrl = `${environment.apiUrl}/winners`;
-  
+
   constructor(private http: HttpClient) {}
 
   saveWinner(winner: any): Observable<any> {

@@ -34,6 +34,7 @@ export class DataEntryComponent implements OnInit {
   special: number = 0; // Initialize special to 0
   rule4: number = 0; // Initialize rule4 to 0
   errorMessage: string = '';
+  lastSavedItem: any = null;
 
   constructor(private itemService: DataService, private winnerService: WinnerService) {}
   
@@ -215,6 +216,13 @@ export class DataEntryComponent implements OnInit {
 
     this.itemService.addItem(selection).subscribe(response => {
       // Data saved successfully in F500
+      // Fetch items and set lastSavedItem
+      this.itemService.getItems().subscribe(data => {
+        this.items = data;
+        this.lastSavedItem = data && data.length > 0 ? data[data.length - 1] : null;
+        // Recalculate totals after saving
+        this.ngOnInit();
+      });
     });
 
     // Clear the fields after saving
@@ -271,7 +279,14 @@ export class DataEntryComponent implements OnInit {
     };
 
     this.itemService.addItem(selection).subscribe(response => {
-      // Data saved successfully in F500
+      // Data saved successfully in Odds
+      // Fetch items and set lastSavedItem
+      this.itemService.getItems().subscribe(data => {
+        this.items = data;
+        this.lastSavedItem = data && data.length > 0 ? data[data.length - 1] : null;
+        // Recalculate totals after saving
+        this.ngOnInit();
+      });
     });
 
     // Clear the fields after saving

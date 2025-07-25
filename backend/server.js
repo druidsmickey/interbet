@@ -50,9 +50,9 @@ app.delete('/items', async (req, res) => {
 app.delete('/winners', async (req, res) => {
   try {
     await Winners.deleteMany({});
-    // Insert default winners for raceNum 1 to 20
+    // Insert default winners for raceNum 1 to 8
     const defaultWinners = [];
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= 8; i++) {
       defaultWinners.push({
         raceNum: i,
         // Add other default fields as needed, e.g.:

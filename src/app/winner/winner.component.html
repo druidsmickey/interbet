@@ -1,20 +1,20 @@
 <form [formGroup]="winnerForm" (ngSubmit)="saveWinner()" class="winner-form">
   <div class="winner-section race-radio-section">
-    <div class="winner-section-title">Select Race</div>
+    <div class="winner-section-title">R</div>
     <div class="winner-radio-group">
       <label *ngFor="let race of [].constructor(numRaces); let i = index" class="winner-radio-label">
         <input type="radio" formControlName="raceRadio" [value]="i + 1" (change)="onRaceNumChange()" />
-        Race {{ i + 1 }}
+        R {{ i + 1 }}
       </label>
     </div>
   </div>
 
   <div formArrayName="winnerChkboxes" class="winner-section">
-    <div class="winner-section-title">Choose Winner</div>
+    <div class="winner-section-title">W</div>
     <div class="winner-checkbox-group">
       <label *ngFor="let checkbox of winnerChkboxes.controls; let i = index" class="winner-checkbox-label">
         <input type="checkbox" [formControlName]="i" />
-        Horse {{ i + 1 }}
+        H {{ i + 1 }}
       </label>
     </div>
   </div>
@@ -22,14 +22,15 @@
   <div formArrayName="specialChkboxes" class="winner-section">
     <div class="winner-section-title">
       <label>
-        Choose OnPitch:
+        Before:
         <input type="checkbox" [(ngModel)]="showSpecialChkboxes" name="showSpecialChkboxes" [ngModelOptions]="{standalone: true}" />
       </label>
-    </div>
+    </div>Update in Params to confirm
     <div class="winner-checkbox-group" *ngIf="showSpecialChkboxes">
+      
       <label *ngFor="let checkbox of specialChkboxes.controls; let i = index" class="winner-checkbox-label">
         <input type="checkbox" [formControlName]="i" />
-        Horse {{ i + 1 }}
+        H {{ i + 1 }}
       </label>
     </div>
   </div>
@@ -37,21 +38,21 @@
   <div formArrayName="rule4Chkboxes" class="winner-section">
     <div class="winner-section-title">
       <label>
-        Rule4:
+        OnPitch:
         <input type="checkbox" [(ngModel)]="showRule4Chkboxes" name="showRule4Chkboxes" [ngModelOptions]="{standalone: true}" />
       </label>
     </div>
     <div class="winner-checkbox-group" *ngIf="showRule4Chkboxes">
       <label *ngFor="let checkbox of rule4Chkboxes.controls; let i = index" class="winner-checkbox-label">
         <input type="checkbox" [formControlName]="i" />
-        Horse {{ i + 1 }}
+        H {{ i + 1 }}
       </label>
     </div>
   </div>
 
   <div *ngIf="showRule4Chkboxes" class="winner-section">
     <label class="winner-label">
-      Rule 4 Deduction:
+      Rule %:
       <input
         type="number"
         formControlName="rule4Deduction"
@@ -64,7 +65,7 @@
     </label>
   </div>
 
-  <button type="submit" class="winner-btn">Save Winner</button>
+  <button type="submit" class="winner-btn">Save</button>
 </form>
 
 <p *ngIf="errorMessage" style="color: red; text-align:center;">{{ errorMessage }}</p>

@@ -1,24 +1,39 @@
 <div class="params-container">
   <form class="params-form">
+    <div class="params-label">
+      Before: Update in Winner first
+    </div>
+
     <div class="params-row">
-      <label for="raceNum" class="params-label">Race Number:</label>
+      <label for="raceNum" class="params-label">R:</label>
       <input id="raceNum" name="raceNum" type="number" [(ngModel)]="raceNum" min="1" max="15" maxlength="2" class="params-input">
     </div>
     <div class="params-row">
-      <label for="horseNum" class="params-label">Horse Number:</label>
+      <label for="horseNum" class="params-label">H:</label>
       <input id="horseNum" name="horseNum" type="number" [(ngModel)]="horseNum" min="1" max="15" maxlength="2" class="params-input">
     </div>
     <div class="params-btn-row">
       <button type="button" (click)="updateSpecial()" class="params-btn">Update Special</button>
       <button type="button" (click)="cancelSpecial()" class="params-btn cancel">Cancel Special</button>
     </div>
-    <div class="params-btn-row">
-      <button type="button" (click)="resetAll()" class="params-btn reset">Reset</button>
-    </div>
+
   </form>
+  <div class="params-row">
+    <label class="params-label">Current Special (no on pitch):</label>
+  </div>
+  <div *ngFor="let w of winner">
+    <div>
+      R {{w.raceNum}}:
+      <span *ngFor="let val of w.specialNum; let i = index">
+        <ng-container *ngIf="val">
+          H {{i+1}}
+        </ng-container>
+      </span>
+    </div>
+  </div>
 </div>
 <style>
-/* filepath: c:\fullstack\src\app\params\params.component.html */
+
 .params-container {
   max-width: 340px;
   margin: 1.2rem auto;

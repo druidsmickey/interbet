@@ -1,5 +1,8 @@
 <form>
-
+  <div *ngIf="lastSavedItem" class="selected-values-inline">
+    <pre *ngIf="lastSavedItem.f500 > 0">{{ lastSavedItem.raceNum }} {{ lastSavedItem.horseNum }} {{ lastSavedItem.books }} {{ lastSavedItem.f500 }} {{lastSavedItem.nameClient}}</pre>
+    <pre *ngIf="lastSavedItem.odds100 > 0">{{ lastSavedItem.raceNum }} {{ lastSavedItem.horseNum }} {{ lastSavedItem.odds100 }} {{ lastSavedItem.stake }} {{lastSavedItem.nameClient}}</pre>
+  </div>
   <!-- Race Number Calculator Grid -->
   <div class="calc-container">
     <div class="calc-title">******* R *******</div>
@@ -20,7 +23,7 @@
   </div>
 
   <div *ngIf="raceNum" class="calc-container">
-  <div class="calc-title">*****************</div>
+  <div class="calc-title">*********************************</div>
   <table style="width:100%">
     <thead>
       <tr>
@@ -36,27 +39,29 @@
         <td>{{ horseIndex + 1 }}</td>
         <ng-container *ngIf="totalprofitloss?.[raceNum-1]?.[horseIndex] !== 'Withdrawn'; else withdrawnTpl2">
           <td>
-            <ng-container *ngIf="totalpayout?.[raceNum-1]?.[horseIndex] !== 0 && totalpayout?.[raceNum-1]?.[horseIndex] !== 'Withdrawn'; else notAvailableTpl">
+            <ng-container *ngIf="totalpayout?.[raceNum-1]?.[horseIndex] !== 0 && totalpayout?.[raceNum-1]?.[horseIndex] !== 'Withdrawn'; else notAvailableTpl1">
               {{
-                (((totalstakePerHorse[raceNum-1][horseIndex] || 0) / (totalpayout[raceNum-1][horseIndex] || 1)) * 500) | number:'1.2-2'
+                (((totalstakePerHorse[raceNum-1][horseIndex] || 0) / (totalpayout[raceNum-1][horseIndex] || 1)) * 500) | number:'2.0-0'
               }}
             </ng-container>
-            <ng-template #notAvailableTpl>
+            <ng-template #notAvailableTpl1>
               0
             </ng-template>
           </td>
           <td>
-            <ng-container *ngIf="totalpayout?.[raceNum-1]?.[horseIndex] !== 0 && totalpayout?.[raceNum-1]?.[horseIndex] !== 'Withdrawn'; else notAvailableTpl">
+            <ng-container *ngIf="totalpayout?.[raceNum-1]?.[horseIndex] !== 0 && totalpayout?.[raceNum-1]?.[horseIndex] !== 'Withdrawn'; else notAvailableTpl2">
               {{
-                ((totalstakePerHorse[raceNum-1][horseIndex] || 0) / 500) | number:'1.2-2'
+                ((totalpayout[raceNum-1][horseIndex] || 0) / 500)  | number:'2.0-0'
               }}
             </ng-container>
-            <ng-template #notAvailableTpl>
+            <ng-template #notAvailableTpl2>
               0
             </ng-template>
           </td>
           <td>
-            {{ totalprofitloss[raceNum-1][horseIndex] | number:'2.0-0' }}
+            <span [ngStyle]="{'color': totalprofitloss[raceNum-1][horseIndex] < 0 ? 'red' : 'inherit'}">
+              {{ totalprofitloss[raceNum-1][horseIndex] | number:'2.0-0' }}
+            </span>
           </td>
 
         </ng-container>
@@ -66,10 +71,11 @@
       </tr>
       <tr style="font-weight:bold; background:#f0f4ff;">
         <td>Total</td>
-        <td></td>
         <td>
-          {{ getAvgSumForRace((raceNum) - 1) | number:'1.2-2' }}
+          {{ getAvgSumForRace((raceNum) - 1) | number:'2.0-0' }}
         </td>
+        <td></td>
+        <td></td>
       </tr>
 
     </tbody>
@@ -78,7 +84,7 @@
 
   <!-- Horse Number Calculator Grid -->
   <div class="calc-container">
-    <div class="calc-title">Select Horse Number</div>
+    <div class="calc-title">******* H *******</div>
     <div class="calc-grid">
       <button type="button"
               *ngFor="let horse of [].constructor(numHorses); let i = index"
@@ -100,7 +106,7 @@
   <ng-container>
     <!-- Sale/Purchase Radio Group -->
     <div class="radio-group-container">
-      <div class="radio-group-title">Sale / Purchase</div>
+      <div class="radio-group-title"></div>
       <div class="radio-group">
         <label>
           <input type="radio" name="betType" value="1" [(ngModel)]="betType" checked/> Sale
@@ -109,7 +115,7 @@
           <input type="radio" name="betType" value="2" [(ngModel)]="betType" /> Purchase
         </label>
       </div>
-      <div class="radio-group-title">Bet Type</div>
+      <div class="radio-group-title"></div>
       <div class="radio-group">
         <label>
           <input type="radio" name="oddsType" value="1" [(ngModel)]="oddsType" min="1" max="5000" maxlength="4" step="1"/> Books 500
@@ -166,6 +172,10 @@
     </div>
     <button type="button" (click)="saveDataOdds()" class="nice-btn">Save</button>
     <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+    <div *ngIf="lastSavedItem" class="last-saved-item">
+      <h4>Last Saved Item</h4>
+      <pre>{{ lastSavedItem | json }}</pre>
+    </div>
   </div>
 </form>
 
