@@ -2,7 +2,7 @@
 
   <!-- Race Number Calculator Grid -->
   <div class="calc-container">
-    <div class="calc-title">Select Race Number</div>
+    <div class="calc-title">******* R *******</div>
     <div class="calc-grid">
       <button type="button"
               *ngFor="let race of [].constructor(numRaces); let i = index"
@@ -13,28 +13,28 @@
   </div>
 
   <div *ngIf="raceNum" class="selected-values-inline">
-    Race Number: <span>{{ raceNum }}</span>
+    R: <span>{{ raceNum }}</span>
     <ng-container *ngIf="horseNum">
-      &nbsp;|&nbsp; Horse Number: <span>{{ horseNum }}</span>
+      &nbsp;|&nbsp; H: <span>{{ horseNum }}</span>
     </ng-container>
   </div>
 
   <div *ngIf="raceNum" class="calc-container">
+  <div class="calc-title">*****************</div>
   <table style="width:100%">
     <thead>
       <tr>
         <th>H</th>
-        <th>PL</th>
         <th>Avg</th>
+        <th>B</th>
+        <th>P</th>
       </tr>
     </thead>
     <tbody>
+
       <tr *ngFor="let horseNum of [].constructor(numHorses); let horseIndex = index">
         <td>{{ horseIndex + 1 }}</td>
         <ng-container *ngIf="totalprofitloss?.[raceNum-1]?.[horseIndex] !== 'Withdrawn'; else withdrawnTpl2">
-          <td>
-            {{ totalprofitloss[raceNum-1][horseIndex] | number:'2.0-0' }}
-          </td>
           <td>
             <ng-container *ngIf="totalpayout?.[raceNum-1]?.[horseIndex] !== 0 && totalpayout?.[raceNum-1]?.[horseIndex] !== 'Withdrawn'; else notAvailableTpl">
               {{
@@ -45,12 +45,25 @@
               0
             </ng-template>
           </td>
+          <td>
+            <ng-container *ngIf="totalpayout?.[raceNum-1]?.[horseIndex] !== 0 && totalpayout?.[raceNum-1]?.[horseIndex] !== 'Withdrawn'; else notAvailableTpl">
+              {{
+                ((totalstakePerHorse[raceNum-1][horseIndex] || 0) / 500) | number:'1.2-2'
+              }}
+            </ng-container>
+            <ng-template #notAvailableTpl>
+              0
+            </ng-template>
+          </td>
+          <td>
+            {{ totalprofitloss[raceNum-1][horseIndex] | number:'2.0-0' }}
+          </td>
+
         </ng-container>
         <ng-template #withdrawnTpl2>
           <td colspan="2">Withdrawn</td>
         </ng-template>
       </tr>
-      <!-- Sum row for Stake/Payout x500 -->
       <tr style="font-weight:bold; background:#f0f4ff;">
         <td>Total</td>
         <td></td>
@@ -58,6 +71,7 @@
           {{ getAvgSumForRace((raceNum) - 1) | number:'1.2-2' }}
         </td>
       </tr>
+
     </tbody>
   </table>
   </div>
