@@ -1,0 +1,37 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Build outputs
+dist
+.angular
+
+# Environment files
+.env
+.env.local
+.env.prod
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Testing
+coverage
+*.tgz
+
+# Logs
+logs
+*.log
+
+# Backend directory
+backend

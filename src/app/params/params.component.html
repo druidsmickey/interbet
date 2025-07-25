@@ -1,0 +1,109 @@
+<div class="params-container">
+  <form class="params-form">
+    <div class="params-row">
+      <label for="raceNum" class="params-label">Race Number:</label>
+      <input id="raceNum" name="raceNum" type="number" [(ngModel)]="raceNum" min="1" max="15" maxlength="2" class="params-input">
+    </div>
+    <div class="params-row">
+      <label for="horseNum" class="params-label">Horse Number:</label>
+      <input id="horseNum" name="horseNum" type="number" [(ngModel)]="horseNum" min="1" max="15" maxlength="2" class="params-input">
+    </div>
+    <div class="params-btn-row">
+      <button type="button" (click)="updateSpecial()" class="params-btn">Update Special</button>
+      <button type="button" (click)="cancelSpecial()" class="params-btn cancel">Cancel Special</button>
+    </div>
+    <div class="params-btn-row">
+      <button type="button" (click)="resetAll()" class="params-btn reset">Reset</button>
+    </div>
+  </form>
+</div>
+<style>
+/* filepath: c:\fullstack\src\app\params\params.component.html */
+.params-container {
+  max-width: 340px;
+  margin: 1.2rem auto;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+}
+.params-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.params-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.2rem;
+}
+.params-label {
+  font-size: 1.02rem;
+  font-weight: 500;
+  color: #2563eb;
+  min-width: 110px;
+}
+.params-input {
+  flex: 1;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid #c3dafe;
+  border-radius: 7px;
+  font-size: 1.08rem;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  background: #fff;
+}
+.params-input:focus {
+  border: 1.5px solid #4e8cff;
+  box-shadow: 0 0 0 2px #e0e7ff;
+}
+.params-btn-row {
+  display: flex;
+  gap: 0.7rem;
+  justify-content: center;
+}
+.params-btn {
+  padding: 0.6rem 1.2rem;
+  background: #4e8cff;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(78,140,255,0.08);
+}
+.params-btn.cancel {
+  background: #e11d48;
+}
+.params-btn.reset {
+  background: #059669;
+}
+.params-btn:hover, .params-btn:active {
+  background: #2563eb;
+}
+.params-btn.cancel:hover, .params-btn.cancel:active {
+  background: #be123c;
+}
+.params-btn.reset:hover, .params-btn.reset:active {
+  background: #047857;
+}
+@media (max-width: 600px) {
+  .params-container {
+    max-width: 98vw;
+    padding: 0.7rem 0.1rem 0.7rem 0.1rem;
+    border-radius: 8px;
+  }
+  .params-label {
+    font-size: 0.98rem;
+    min-width: 90px;
+  }
+  .params-btn {
+    font-size: 0.98rem;
+    padding: 0.5rem 0.7rem;
+  }
+}
+</style>
+

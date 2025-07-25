@@ -1,0 +1,153 @@
+<div class="listdata-container">
+  <h3 class="listdata-title">Entries</h3>
+  <ul class="listdata-list">
+    @for (item of items; track item._id) {
+      <li class="listdata-item">
+        <div class="listdata-row">
+          <span class="listdata-label">Name:</span>
+          <span class="listdata-value">{{ item.nameClient }}</span>
+          <span class="listdata-date">
+            {{ (item.date || item.createdAt) | date:'dd/MM' }}
+            {{ (item.date || item.createdAt) | date:'HH:mm' }}
+          </span>
+        </div>
+        <div class="listdata-row">
+          <span class="listdata-label">Race:</span>
+          <span class="listdata-value">{{ item.raceNum }}</span>
+          <span class="listdata-label">Horse:</span>
+          <span class="listdata-value">{{ item.horseNum }}</span>
+        </div>
+        <div class="listdata-row">
+          <span class="listdata-label">Type:</span>
+          <span class="listdata-value" [ngClass]="{'purchase-type': item.betType === 2}">
+            {{ item.betType === 1 ? 'Sale' : 'Purchase' }}
+          </span>
+          <span class="listdata-label">Books:</span>
+          <span class="listdata-value">{{ item.books }}</span>
+          <span class="listdata-label">F500:</span>
+          <span class="listdata-value">{{ item.f500 }}</span>
+          <span class="listdata-label">Odds:</span>
+          <span class="listdata-value">{{ item.odds100}}</span>
+        </div>
+        <div class="listdata-row">
+          <span class="listdata-label">Stake:</span>
+          <span class="listdata-value">{{ item.stake | number:'1.0-0' }}</span>
+          <span class="listdata-label">Tax:</span>
+          <span class="listdata-value">{{ item.tax }}</span>
+        </div>
+        <div class="listdata-row">
+          <span *ngIf="item.special === 1" class="special-label">Special</span>
+          <span *ngIf="item.cancel === 1" class="cancel-label">Cancelled</span>
+          <button (click)="updateCancelStatus(item)" class="cancel-btn">
+            {{ item.cancel === 1 ? 'Undo Cancel' : 'Cancel' }}
+          </button>
+        </div>
+      </li>
+    }
+  </ul>
+</div>
+<style>
+/* filepath: c:\fullstack\src\app\listdata\listdata.component.html */
+.listdata-container {
+  max-width: 340px;
+  margin: 1.2rem auto;
+  padding: 0.7rem 0.5rem 1.2rem 0.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.listdata-title {
+  text-align: center;
+  color: #2563eb;
+  font-size: 1.15rem;
+  margin-bottom: 0.7rem;
+  letter-spacing: 0.02em;
+}
+.listdata-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.listdata-item {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  margin-bottom: 1.1rem;
+  padding: 0.8rem 0.7rem 0.7rem 0.7rem;
+  font-size: 0.98rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.listdata-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.1rem;
+}
+.listdata-label {
+  color: #888;
+  font-size: 0.95em;
+  font-weight: 500;
+}
+.listdata-value {
+  color: #222;
+  font-weight: 600;
+  font-size: 1em;
+}
+.special-label {
+  color: #059669;
+  font-weight: 600;
+  font-size: 0.97em;
+  margin-right: 0.7em;
+}
+.cancel-label {
+  color: #e11d48;
+  font-weight: 600;
+  font-size: 0.97em;
+  margin-right: 0.7em;
+}
+.cancel-btn {
+  background: #4e8cff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: auto;
+  transition: background 0.2s;
+}
+.cancel-btn:hover, .cancel-btn:active {
+  background: #2563eb;
+}
+.listdata-date {
+  margin-left: auto;
+  color: #4e8cff;
+  font-size: 0.92em;
+  font-weight: 500;
+  padding-left: 0.7em;
+  white-space: nowrap;
+}
+.purchase-type {
+  color: #e11d48;
+  font-weight: 700;
+}
+@media (max-width: 600px) {
+  .listdata-container {
+    max-width: 98vw;
+    padding: 0.4rem 0.1rem 0.7rem 0.1rem;
+    border-radius: 8px;
+  }
+  .listdata-item {
+    padding: 0.7rem 0.3rem 0.6rem 0.3rem;
+    font-size: 0.93rem;
+  }
+  .cancel-btn {
+    font-size: 0.95rem;
+    padding: 0.35rem 0.7rem;
+  }
+}
+</style>
