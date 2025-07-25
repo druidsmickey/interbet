@@ -55,14 +55,14 @@ jobs:
             API_URL=/api
 
   redeploy:
-    name: Deploy to staging environment
+    name: Deploy to digital ocean server
     runs-on: ubuntu-latest
     needs: build-and-push-images
     steps:
-      - name: Deploy to staging server
+      - name: Deploy to digital ocean server
         uses: distributhor/workflow-webhook@v3
         with:
-          webhook_url: ${{ secrets.DEPLOY_WEBHOOK_URL }}/redeploy-application
+          webhook_url: http://134.209.144.53:9000/hooks/redeploy-application
           webhook_auth_type: "header"
-          webhook_auth: "X-Auth-Secret:${{ secrets.WEBHOOK_AUTH_SECRET }}"
+          webhook_auth: "X-Auth-Secret:eC7eIGQUlQCQ4hmY3OCZj5BFhrRqlf3zc1lYFe0ZfCZgRgb2dVKwhycIbSe1Gmei"
           data: '{"repository":"${{ github.repository }}", "commit":"${{ github.sha }}"}'
