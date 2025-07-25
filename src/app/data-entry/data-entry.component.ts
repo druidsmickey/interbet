@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../services/data.service';
+import { WinnerService } from '../services/winner.service'; // Import the service
 
 @Component({
   selector: 'app-data-entry',
@@ -10,9 +11,14 @@ import { DataService } from '../services/data.service';
   styleUrls: ['./data-entry.component.css']
 })
 export class DataEntryComponent implements OnInit {
-  numRaces: number = 9;
+  numRaces: number = 8;
   numHorses: number = 11;
   items: any[] = [];
+  winners: any[] = [];
+  totalstake: number[] = [];
+  totalstakePerHorse: number[][] = []; // <-- Add this line
+  totalpayout: any[][] = [];
+  totalprofitloss: any[][] = [];
   raceNum: number | null = null;
   horseNum: number | null = null;
   betType: number | null = 1; // Default value set to 1 for "Sale"
@@ -29,12 +35,138 @@ export class DataEntryComponent implements OnInit {
   rule4: number = 0; // Initialize rule4 to 0
   errorMessage: string = '';
 
-  constructor(private itemService: DataService) {}
+  constructor(private itemService: DataService, private winnerService: WinnerService) {}
   
   ngOnInit() {
+    for (let i = 0; i < this.numRaces; i++) {
+      this.totalstake[i] = 0;
+      this.totalstakePerHorse[i] = []; // <-- Add this line
+      this.totalpayout[i] = [];
+      this.totalprofitloss[i] = [];
+      for (let j = 0; j < this.numHorses; j++) {
+        this.totalstakePerHorse[i][j] = 0; // <-- Add this line
+        this.totalpayout[i][j] = 0;
+        this.totalprofitloss[i][j] = 0;
+      }
+    }
+
+
     this.itemService.getItems().subscribe(data => {
       this.items = data;
+
+      this.winnerService.getWinners().subscribe(winnersData => {
+        this.winners = winnersData;
+
+        // Build a map for quick winner lookup by raceNum
+        const winnerMap = new Map<number, any>();
+        for (const winner of this.winners) {
+          winnerMap.set(winner.raceNum, winner);
+        }
+
+        // Calculate totalstake for each race, ignoring items with cancel=1, special=1,
+        // or winner.specialNum[horseNum-1]=true, or winner.rule4Num[horseNum-1]=true
+        for (let race = 0; race < this.numRaces; race++) {
+          this.totalstake[race] = this.items
+            .filter(item => {
+              if (
+                item.raceNum !== race + 1 ||
+                item.cancel === 1 ||
+                item.special === 1
+              ) {
+                return false;
+              }
+              const winner = winnerMap.get(item.raceNum);
+              // If winner or winner.specialNum or winner.rule4Num is missing, include the item
+              if (!winner || !winner.specialNum || !winner.rule4Num) return true;
+              // Exclude if winner.specialNum[horseNum-1] is true or winner.rule4Num[horseNum-1] is true
+              if (winner.specialNum[item.horseNum - 1] === true) return false;
+              if (winner.rule4Num[item.horseNum - 1] === true) return false;
+              return true;
+            })
+            .reduce((sum, item) => {
+              const stake = item.betType === 2 ? -(item.stake || 0) : (item.stake || 0);
+              return sum + stake;
+            }, 0);
+        }
+
+        // Calculate totalstakePerHorse for each horse in each race
+        for (let i = 0; i < this.numRaces; i++) {
+          for (let j = 0; j < this.numHorses; j++) {
+            this.totalstakePerHorse[i][j] = this.items
+              .filter(item =>
+                item.raceNum === i + 1 &&
+                item.horseNum === j + 1 &&
+                item.cancel !== 1 &&
+                item.special !== 1
+              )
+              .reduce((sum, item) => {
+                const stake = item.betType === 2 ? -(item.stake || 0) : (item.stake || 0);
+                return sum + stake;
+              }, 0);
+          }
+        }
+
+        // Calculate totalpayout for each horse in each race
+        for (let i = 0; i < this.numRaces; i++) {
+          for (let j = 0; j < this.numHorses; j++) {
+            const winner = winnerMap.get(i + 1);
+            if (!winner) {
+              console.log(winner);
+              continue;
+            }
+            if (
+              !winner.specialNum ||
+              !winner.rule4Num ||
+              (winner.specialNum && winner.specialNum[j] === true) ||
+              (winner.rule4Num && winner.rule4Num[j] === true)
+            ) {
+              this.totalpayout[i][j] = 'Withdrawn';
+              this.totalprofitloss[i][j] = 'Withdrawn';
+              console.log(`Race ${i + 1}, Horse ${j + 1}: Withdrawn`);
+              continue;
+            }
+            // Sum payout for all items for this race/horse, ignoring cancel/special
+            const payout = this.items
+              .filter(item =>
+                item.raceNum === i + 1 &&         // Only items for the current race (i+1 because i is 0-based)
+                item.horseNum === j + 1 &&        // Only items for the current horse (j+1 because j is 0-based)
+                item.cancel !== 1 &&              // Exclude cancelled items
+                item.special !== 1                // Exclude special items
+              )
+              .reduce((sum, item) => {
+                const payoutValue = item.betType === 2 ? -(item.payout || 0) : (item.payout || 0);
+                console.log(`Race ${i + 1}, Horse ${j + 1}: Payout Value = ${payoutValue}`);
+              //  this.totalpayout[i][j] += payoutValue; // Accumulate payout for
+                console.log(item.betType);
+                return sum + payoutValue;
+              }, 0);
+              console.log(winner.rule4Deduction);
+            // this.totalpayout[i][j] = payout * (100 - winner.rule4Deduction) / 100; // Store the total payout for horse j in race i
+            // Calculate profit/loss: totalstake for the race minus payout for this horse
+            this.totalprofitloss[i][j] = this.totalstake[i] - (payout * (100 - winner.rule4Deduction) / 100);
+            console.log(`Race ${i + 1}, Horse ${j + 1}: Payout = ${this.totalpayout[i][j]}`);
+            // Store the total payout for horse j in race i (after rule4 deduction)
+            this.totalpayout[i][j] = payout * (100 - winner.rule4Deduction) / 100;
+            // Calculate profit/loss: totalstake for the race minus payout for this horse
+            this.totalprofitloss[i][j] = this.totalstake[i] - this.totalpayout[i][j];
+          }
+        }
+
+      });
     });
+  }
+
+  getAvgSumForRace(raceIdx: number): number {
+    if (!Array.isArray(this.totalpayout?.[raceIdx]) || !Array.isArray(this.totalstakePerHorse?.[raceIdx])) {
+      return 0;
+    }
+    return this.totalpayout[raceIdx]
+      .map((payout: any, idx: number) =>
+        payout !== 0 && payout !== 'Withdrawn'
+          ? ((+((this.totalstakePerHorse?.[raceIdx]?.[idx]) || 0)) / (+payout || 1) * 500)
+          : 0
+      )
+      .reduce((sum: number, val: number) => sum + (isNaN(val) ? 0 : +val), 0);
   }
 
   get oddsType(): number | null {
@@ -98,7 +230,15 @@ export class DataEntryComponent implements OnInit {
     this.tax = 5; // Reset tax to default value
     this.cancel = 0; // Reset cancel to default value
     this.special = 0; // Provide a default value for special
-    this.rule4 = 0; // Provide a default value for rule4  
+    this.rule4 = 0; // Provide a default value for rule4
+    
+
+    this.itemService.getItems().subscribe(data => {
+      this.items = data;
+      // Recalculate totals after saving
+      this.ngOnInit();
+    });
+
   }
 
   saveDataOdds() {
@@ -148,5 +288,13 @@ export class DataEntryComponent implements OnInit {
     this.cancel = 0; // Reset cancel to default value
     this.special = 0; // Provide a default value for special
     this.rule4 = 0; // Provide a default value for rule4  
+    
+
+    this.itemService.getItems().subscribe(data => {
+      this.items = data;
+      // Recalculate totals after saving
+      this.ngOnInit();
+    });
+
   }
 }
