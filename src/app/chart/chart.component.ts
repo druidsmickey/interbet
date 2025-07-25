@@ -16,7 +16,7 @@ export class ChartComponent implements OnInit {
   items: any[] = [];
   winners: any[] = [];
   numRaces: number = 8;
-  numHorses: number = 11;
+  numHorses: number = 12;
   totalstake: number[] = [];
   totalpayout: any[][] = [];
   totalprofitloss: any[][] = [];

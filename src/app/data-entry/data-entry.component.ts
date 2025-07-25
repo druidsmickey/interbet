@@ -12,7 +12,7 @@ import { WinnerService } from '../services/winner.service'; // Import the servic
 })
 export class DataEntryComponent implements OnInit {
   numRaces: number = 8;
-  numHorses: number = 11;
+  numHorses: number = 12;
   items: any[] = [];
   winners: any[] = [];
   totalstake: number[] = [];

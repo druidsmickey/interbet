@@ -17,7 +17,7 @@ export class WinnerComponent implements OnInit {
   showSpecialChkboxes: any;
   items: any[] = [];
   numRaces: number = 8;
-  numHorses: number = 11;
+  numHorses: number = 12;
   rule4Deduction: number = 0; 
 
   constructor(private fb: FormBuilder, private winnerService: WinnerService) {
